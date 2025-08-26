@@ -1,5 +1,5 @@
-import { SignupData } from '@/dto/requests';
-import { SignupResponse } from '@/dto/responses';
+import { LoginData, SignupData } from '@/dto/request';
+import { LoginResponse, SignupResponse } from '@/dto/response';
 import axios from 'axios';
 
 const api = axios.create({
@@ -8,6 +8,11 @@ const api = axios.create({
 
 export const signupUser = async (data: SignupData): Promise<SignupResponse> => {
   const response = await api.post('/api/users', data);
+  return response.data;
+};
+
+export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
+  const response = await api.post('/api/auth/login', data);
   return response.data;
 };
 

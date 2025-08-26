@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import { signupUser } from '@/services/api';
-import { SignupData } from '@/dto/requests';
+import { SignupData } from '@/dto/request';
 
 export default function SignupPage() {
   const {
