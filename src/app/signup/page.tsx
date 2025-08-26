@@ -38,112 +38,122 @@ export default function SignupPage() {
   };
 
   return (
-    <Container component='main' maxWidth='sm'>
+    <Container component='main' maxWidth='lg'>
       <Box
         sx={{
           minHeight: '100vh',
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
+          flexDirection: 'row-reverse',
           alignItems: 'center',
         }}
       >
-        <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
-          <Typography component='h1' variant='h4' align='center' gutterBottom>
-            Cadastro
-          </Typography>
-          <Typography
-            variant='body2'
-            align='center'
-            color='text.secondary'
-            sx={{ mb: 3 }}
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Paper
+            elevation={3}
+            sx={{ padding: 4, width: '100%', maxWidth: 400 }}
           >
-            Crie sua conta EstokIA
-          </Typography>
-
-          <Box
-            component='form'
-            onSubmit={handleSubmit(onSubmit)}
-            sx={{ mt: 1 }}
-          >
-            <Controller
-              name='name'
-              control={control}
-              rules={{ required: 'Nome é obrigatório' }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  margin='normal'
-                  required
-                  fullWidth
-                  id='name'
-                  label='Nome'
-                  autoComplete='name'
-                  autoFocus
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
-                />
-              )}
-            />
-            <Controller
-              name='email'
-              control={control}
-              rules={{
-                required: 'Email é obrigatório',
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: 'Email inválido',
-                },
-              }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  margin='normal'
-                  required
-                  fullWidth
-                  id='email'
-                  label='Email'
-                  autoComplete='email'
-                  type='email'
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
-                />
-              )}
-            />
-            <Controller
-              name='password'
-              control={control}
-              rules={{
-                required: 'Senha é obrigatória',
-                minLength: {
-                  value: 6,
-                  message: 'Senha deve ter pelo menos 6 caracteres',
-                },
-              }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  margin='normal'
-                  required
-                  fullWidth
-                  id='password'
-                  label='Senha'
-                  type='password'
-                  autoComplete='new-password'
-                  error={!!errors.password}
-                  helperText={errors.password?.message}
-                />
-              )}
-            />
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              sx={{ mt: 3, mb: 2 }}
+            <Typography component='h1' variant='h4' align='center' gutterBottom>
+              Cadastro
+            </Typography>
+            <Typography
+              variant='body2'
+              align='center'
+              color='text.secondary'
+              sx={{ mb: 3 }}
             >
-              Cadastrar
-            </Button>
-            <Box sx={{ textAlign: 'center' }}>
+              Crie sua conta EstokIA
+            </Typography>
+
+            <Box
+              component='form'
+              onSubmit={handleSubmit(onSubmit)}
+              sx={{ mt: 1 }}
+            >
+              <Controller
+                name='name'
+                control={control}
+                rules={{ required: 'Nome é obrigatório' }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin='normal'
+                    required
+                    fullWidth
+                    id='name'
+                    label='Nome'
+                    autoComplete='name'
+                    autoFocus
+                    error={!!errors.name}
+                    helperText={errors.name?.message}
+                  />
+                )}
+              />
+              <Controller
+                name='email'
+                control={control}
+                rules={{
+                  required: 'Email é obrigatório',
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: 'Email inválido',
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin='normal'
+                    required
+                    fullWidth
+                    id='email'
+                    label='Email'
+                    autoComplete='email'
+                    type='email'
+                    error={!!errors.email}
+                    helperText={errors.email?.message}
+                  />
+                )}
+              />
+              <Controller
+                name='password'
+                control={control}
+                rules={{
+                  required: 'Senha é obrigatória',
+                  minLength: {
+                    value: 6,
+                    message: 'Senha deve ter pelo menos 6 caracteres',
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin='normal'
+                    required
+                    fullWidth
+                    id='password'
+                    label='Senha'
+                    type='password'
+                    autoComplete='new-password'
+                    error={!!errors.password}
+                    helperText={errors.password?.message}
+                  />
+                )}
+              />
+              <Button
+                type='submit'
+                fullWidth
+                variant='contained'
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Cadastrar
+              </Button>
+
               <Typography variant='body2'>
                 Já tem uma conta?{' '}
                 <Link href='/login' passHref>
@@ -153,8 +163,26 @@ export default function SignupPage() {
                 </Link>
               </Typography>
             </Box>
-          </Box>
-        </Paper>
+          </Paper>
+        </Box>
+        <Box sx={{ textAlign: 'center' }}>
+          <Typography variant='body1' gutterBottom>
+            <strong>Estoque:</strong> Total de itens em estoque, itens críticos,
+            itens fora de estoque.
+          </Typography>
+          <Typography variant='body1' gutterBottom>
+            <strong>Previsões:</strong> Gráficos de previsão de demanda em 7
+            dias.
+          </Typography>
+          <Typography variant='body1' gutterBottom>
+            <strong>Transportadoras:</strong> Entregas pendentes, entregas
+            atrasadas, entregas concluídas.
+          </Typography>
+          <Typography variant='body1' gutterBottom>
+            <strong>Relatórios:</strong> Relatórios de vendas, relatórios de
+            inventário.
+          </Typography>
+        </Box>
       </Box>
     </Container>
   );
