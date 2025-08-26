@@ -55,6 +55,10 @@ export default function LoginPage() {
             <Typography component="h1" variant="h4" align="center" gutterBottom>
               Entrar
             </Typography>
+            <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
+              Entre com sua conta EstokIA
+            </Typography>
+            
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
