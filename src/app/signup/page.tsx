@@ -1,40 +1,44 @@
 'use client';
 
-import { useState } from 'react';
-import { 
-  Box, 
-  Button, 
-  Container, 
-  Paper, 
-  TextField, 
-  Typography, 
-  Link as MuiLink 
+import { useForm, Controller } from 'react-hook-form';
+import {
+  Box,
+  Button,
+  Container,
+  Paper,
+  TextField,
+  Typography,
+  Link as MuiLink,
 } from '@mui/material';
 import Link from 'next/link';
+import { signupUser } from '@/services/api';
+import { SignupData } from '@/dto/requests';
 
 export default function SignupPage() {
-  const [formData, setFormData] = useState({
-    nome: '',
-    email: '',
-    telefone: '',
-    senha: ''
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupData>({
+    defaultValues: {
+      email: '',
+      name: '',
+      password: '',
+    },
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    console.log('Signup data:', formData);
+  const onSubmit = async (data: SignupData) => {
+    console.log('Signup data:', data);
+    try {
+      var responseData = signupUser(data);
+      console.log('Server response:', responseData);
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
   };
 
   return (
-    <Container component="main" maxWidth="sm">
+    <Container component='main' maxWidth='sm'>
       <Box
         sx={{
           minHeight: '100vh',
@@ -45,75 +49,105 @@ export default function SignupPage() {
         }}
       >
         <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
-          <Typography component="h1" variant="h4" align="center" gutterBottom>
+          <Typography component='h1' variant='h4' align='center' gutterBottom>
             Cadastro
           </Typography>
-          <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
+          <Typography
+            variant='body2'
+            align='center'
+            color='text.secondary'
+            sx={{ mb: 3 }}
+          >
             Crie sua conta EstokIA
           </Typography>
-          
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="nome"
-              label="Nome"
-              name="nome"
-              autoComplete="name"
-              autoFocus
-              value={formData.nome}
-              onChange={handleChange}
+
+          <Box
+            component='form'
+            onSubmit={handleSubmit(onSubmit)}
+            sx={{ mt: 1 }}
+          >
+            <Controller
+              name='name'
+              control={control}
+              rules={{ required: 'Nome é obrigatório' }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  margin='normal'
+                  required
+                  fullWidth
+                  id='name'
+                  label='Nome'
+                  autoComplete='name'
+                  autoFocus
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
+                />
+              )}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
-              value={formData.email}
-              onChange={handleChange}
-              type="email"
+            <Controller
+              name='email'
+              control={control}
+              rules={{
+                required: 'Email é obrigatório',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Email inválido',
+                },
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  margin='normal'
+                  required
+                  fullWidth
+                  id='email'
+                  label='Email'
+                  autoComplete='email'
+                  type='email'
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
+                />
+              )}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="telefone"
-              label="Telefone"
-              name="telefone"
-              autoComplete="tel"
-              value={formData.telefone}
-              onChange={handleChange}
-              type="tel"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="senha"
-              label="Senha"
-              type="password"
-              id="senha"
-              autoComplete="new-password"
-              value={formData.senha}
-              onChange={handleChange}
+            <Controller
+              name='password'
+              control={control}
+              rules={{
+                required: 'Senha é obrigatória',
+                minLength: {
+                  value: 6,
+                  message: 'Senha deve ter pelo menos 6 caracteres',
+                },
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  margin='normal'
+                  required
+                  fullWidth
+                  id='password'
+                  label='Senha'
+                  type='password'
+                  autoComplete='new-password'
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                />
+              )}
             />
             <Button
-              type="submit"
+              type='submit'
               fullWidth
-              variant="contained"
+              variant='contained'
               sx={{ mt: 3, mb: 2 }}
             >
               Cadastrar
             </Button>
             <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="body2">
+              <Typography variant='body2'>
                 Já tem uma conta?{' '}
-                <Link href="/login" passHref>
-                  <MuiLink component="span" sx={{ cursor: 'pointer' }}>
+                <Link href='/login' passHref>
+                  <MuiLink component='span' sx={{ cursor: 'pointer' }}>
                     Faça login
                   </MuiLink>
                 </Link>
