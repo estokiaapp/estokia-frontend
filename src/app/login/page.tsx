@@ -14,8 +14,10 @@ import Link from 'next/link';
 import { loginUser } from '@/services/api';
 import { LoginData } from '@/dto/request';
 import { useForm } from 'react-hook-form';
+import { useAlert } from '@/app/context/AlertContext';
 
 export default function LoginPage() {
+  const { showAlert } = useAlert();
   const {
     register,
     handleSubmit,
@@ -34,6 +36,10 @@ export default function LoginPage() {
       console.log('Server response:', responseData);
     } catch (error) {
       console.error('There was an error!', error);
+      showAlert(
+        'Erro ao fazer login. Verifique suas credenciais e tente novamente.',
+        'error'
+      );
     }
   };
 
@@ -93,6 +99,7 @@ export default function LoginPage() {
                 type='email'
                 error={!!errors.email}
                 helperText={errors.email?.message}
+                style={{ WebkitBoxShadow: 'transparent !important' }}
               />
               <TextField
                 {...register('password', {
