@@ -28,3 +28,15 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), Roboto, Arial, Helvetica, sans-serif;
 }
+
+/* Remove webkit autofill styles */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  -webkit-text-fill-color: inherit !important;
+  caret-color: inherit !important;
+  background-color: transparent !important;
+}
