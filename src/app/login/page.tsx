@@ -56,9 +56,10 @@ export default function LoginPage() {
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'row-reverse',
+          flexDirection: { xs: 'column', md: 'row-reverse' },
           minHeight: '100vh',
           alignItems: 'center',
+          py: { xs: 2, md: 0 },
         }}
       >
         <Box
@@ -67,11 +68,18 @@ export default function LoginPage() {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
+            width: { xs: '100%', md: 'auto' },
+            mb: { xs: 4, md: 0 },
           }}
         >
           <Paper
             elevation={3}
-            sx={{ padding: 4, width: '100%', maxWidth: 400 }}
+            sx={{
+              padding: { xs: 3, sm: 4 },
+              width: '100%',
+              maxWidth: { xs: '100%', sm: 400 },
+              mx: { xs: 0, sm: 'auto' },
+            }}
           >
             <Typography component='h1' variant='h4' align='center' gutterBottom>
               Login
@@ -162,28 +170,159 @@ export default function LoginPage() {
         <Box
           sx={{
             flex: 1,
-            padding: 4,
+            padding: { xs: 2, sm: 3, md: 4 },
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            order: { xs: -1, md: 0 },
+            textAlign: { xs: 'center', md: 'left' },
           }}
         >
-          <Typography variant='h4' gutterBottom>
-            EstokIa
-          </Typography>
-          <Typography variant='body1' gutterBottom>
-            <strong>Estoque:</strong> Total de itens em estoque, itens críticos,
-            itens fora de estoque.
-          </Typography>
-          <Typography variant='body1' gutterBottom>
-            <strong>Previsões:</strong> Gráficos de previsão de demanda em 7
-            dias.
-          </Typography>
-          <Typography variant='body1' gutterBottom>
-            <strong>Transportadoras:</strong> Entregas pendentes, entregas
-            atrasadas, entregas concluídas.
-          </Typography>
-          <Typography variant='body1' gutterBottom>
-            <strong>Relatórios:</strong> Relatórios de vendas, relatórios de
-            inventário.
-          </Typography>
+          <Box sx={{ mb: { xs: 3, md: 4 } }}>
+            <Typography
+              component='h1'
+              gutterBottom
+              sx={{
+                fontSize: { xs: '2rem', sm: '3rem' },
+                fontWeight: 'bold',
+                background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                mb: 2,
+              }}
+            >
+              EstokIA
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: { xs: '1rem', md: '1.25rem' },
+                color: 'text.secondary',
+                fontWeight: 300,
+                mb: 1,
+              }}
+            >
+              Gerencie seu estoque com inteligência artificial
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+              flexDirection: 'column',
+              gap: { xs: 2, md: 3 },
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: { xs: 1.5, md: 2 },
+              }}
+            >
+              <Box
+                sx={{
+                  width: { xs: 6, md: 8 },
+                  height: { xs: 6, md: 8 },
+                  borderRadius: '50%',
+                  bgcolor: 'primary.main',
+                  mt: { xs: 0.5, md: 1 },
+                  flexShrink: 0,
+                }}
+              />
+              <Box>
+                <Typography
+                  sx={{
+                    fontSize: { xs: '1rem', md: '1.125rem' },
+                    fontWeight: 600,
+                    color: 'text.primary',
+                  }}
+                >
+                  Controle de Estoque
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: '0.875rem',
+                    color: 'text.secondary',
+                  }}
+                >
+                  Monitore itens críticos e níveis de inventário em tempo real
+                </Typography>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <Box
+                sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  bgcolor: 'success.main',
+                  mt: 1,
+                  flexShrink: 0,
+                }}
+              />
+              <Box>
+                <Typography
+                  variant='subtitle1'
+                  sx={{ fontWeight: 600, color: 'text.primary' }}
+                >
+                  Previsões Inteligentes
+                </Typography>
+                <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+                  Análises preditivas de demanda com IA para 7 dias
+                </Typography>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <Box
+                sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  bgcolor: 'warning.main',
+                  mt: 1,
+                  flexShrink: 0,
+                }}
+              />
+              <Box>
+                <Typography
+                  variant='subtitle1'
+                  sx={{ fontWeight: 600, color: 'text.primary' }}
+                >
+                  Gestão de Entregas
+                </Typography>
+                <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+                  Acompanhe entregas pendentes, atrasadas e concluídas
+                </Typography>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <Box
+                sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  bgcolor: 'info.main',
+                  mt: 1,
+                  flexShrink: 0,
+                }}
+              />
+              <Box>
+                <Typography
+                  variant='subtitle1'
+                  sx={{ fontWeight: 600, color: 'text.primary' }}
+                >
+                  Relatórios Avançados
+                </Typography>
+                <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+                  Insights de vendas e inventário para decisões estratégicas
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Container>
