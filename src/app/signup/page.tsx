@@ -13,6 +13,7 @@ import {
 import Link from 'next/link';
 import { signupUser } from '@/services/api';
 import { SignupData } from '@/dto/request';
+import LoginTexts from '@/components/LoginTexts';
 
 export default function SignupPage() {
   const {
@@ -165,24 +166,7 @@ export default function SignupPage() {
             </Box>
           </Paper>
         </Box>
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant='body1' gutterBottom>
-            <strong>Estoque:</strong> Total de itens em estoque, itens críticos,
-            itens fora de estoque.
-          </Typography>
-          <Typography variant='body1' gutterBottom>
-            <strong>Previsões:</strong> Gráficos de previsão de demanda em 7
-            dias.
-          </Typography>
-          <Typography variant='body1' gutterBottom>
-            <strong>Transportadoras:</strong> Entregas pendentes, entregas
-            atrasadas, entregas concluídas.
-          </Typography>
-          <Typography variant='body1' gutterBottom>
-            <strong>Relatórios:</strong> Relatórios de vendas, relatórios de
-            inventário.
-          </Typography>
-        </Box>
+        <LoginTexts />
       </Box>
     </Container>
   );
