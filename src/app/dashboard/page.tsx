@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Box,
@@ -54,7 +54,24 @@ export default function DashboardPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState('Dashboard');
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
+
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+    setIsLoading(false);
+  }, [router]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -70,6 +87,8 @@ export default function DashboardPage() {
   };
 
   const handleLogoutConfirm = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setLogoutModalOpen(false);
     router.push('/login');
   };
@@ -77,6 +96,14 @@ export default function DashboardPage() {
   const handleLogoutCancel = () => {
     setLogoutModalOpen(false);
   };
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Typography>Carregando...</Typography>
+      </Box>
+    );
+  }
 
   const drawer = (
     <div>
@@ -140,7 +167,9 @@ export default function DashboardPage() {
           <IconButton color="inherit">
             <NotificationsIcon />
           </IconButton>
-          <Avatar sx={{ ml: 2 }}>U</Avatar>
+          <Avatar sx={{ ml: 2 }}>
+            {user?.name ? user.name.charAt(0).toUpperCase() : user?.email ? user.email.charAt(0).toUpperCase() : 'U'}
+          </Avatar>
         </Toolbar>
       </AppBar>
       
