@@ -13,7 +13,15 @@ export const signupUser = async (data: SignupData): Promise<SignupResponse> => {
 
 export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
   const response = await api.post('/api/auth/login', data);
-  return response.data;
+  const responseData = response.data;
+  if (responseData.token) {
+    localStorage.setItem('@estokIApp:token', responseData.token);
+  }
+  if (responseData.user) {
+    localStorage.setItem('@estokIAApp:user', JSON.stringify(responseData.user));
+  }
+
+  return responseData;
 };
 
 export default api;

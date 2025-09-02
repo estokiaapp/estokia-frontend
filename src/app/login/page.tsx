@@ -15,9 +15,11 @@ import { loginUser } from '@/services/api';
 import { LoginData } from '@/dto/request';
 import { useForm } from 'react-hook-form';
 import { useAlert } from '@/app/context/AlertContext';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const { showAlert } = useAlert();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -34,6 +36,12 @@ export default function LoginPage() {
       console.log('Login data:', data);
       const responseData = await loginUser(data);
       console.log('Server response:', responseData);
+
+      showAlert('Login realizado com sucesso!', 'success');
+
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 1000);
     } catch (error) {
       console.error('There was an error!', error);
       showAlert(
@@ -99,7 +107,6 @@ export default function LoginPage() {
                 type='email'
                 error={!!errors.email}
                 helperText={errors.email?.message}
-                style={{ WebkitBoxShadow: 'transparent !important' }}
               />
               <TextField
                 {...register('password', {
