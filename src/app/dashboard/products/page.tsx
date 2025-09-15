@@ -22,9 +22,9 @@ import {
   ProductForm,
   ProductsTable,
   DeleteProductDialog,
-  ActionMenu,
   ProductFormData,
 } from './components';
+import { ActionMenu } from '@/components/shared';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
