@@ -40,14 +40,8 @@ const drawerWidth = 240;
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-  { text: 'Estoque', icon: <InventoryIcon />, path: '/dashboard/inventory' },
-  { text: 'Pedidos', icon: <OrdersIcon />, path: '/dashboard/orders' },
+  { text: 'Produtos', icon: <InventoryIcon />, path: '/dashboard/products' },
   { text: 'Colaboradores', icon: <CustomersIcon />, path: '/dashboard/users' },
-  {
-    text: 'Configurações',
-    icon: <SettingsIcon />,
-    path: '/dashboard/settings',
-  },
 ];
 
 interface DashboardLayoutProps {
@@ -102,7 +96,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   const getCurrentPageTitle = () => {
-    const currentItem = menuItems.find(item => item.path === pathname);
+    const currentItem = menuItems.find((item) => item.path === pathname);
     return currentItem ? currentItem.text : 'Dashboard';
   };
 

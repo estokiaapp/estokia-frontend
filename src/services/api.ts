@@ -1,5 +1,5 @@
-import { LoginData, SignupData } from '@/dto/request';
-import { LoginResponse, SignupResponse, User, UsersResponse } from '@/dto/response';
+import { LoginData, SignupData, CreateProductData, UpdateProductData } from '@/dto/request';
+import { LoginResponse, SignupResponse, User, UsersResponse, Product, Category } from '@/dto/response';
 import axios from 'axios';
 
 export const STORAGE_KEYS = {
@@ -63,6 +63,37 @@ export const updateUser = async (id: number, userData: { name: string; email: st
 
 export const deleteUser = async (id: number): Promise<void> => {
   await api.delete(`/api/users/${id}`);
+};
+
+// Product API functions
+export const getProducts = async (): Promise<Product[]> => {
+  const response = await api.get<Product[]>('/api/products');
+  return response.data;
+};
+
+export const getProductById = async (id: string): Promise<Product> => {
+  const response = await api.get<Product>(`/api/products/${id}`);
+  return response.data;
+};
+
+export const createProduct = async (productData: CreateProductData): Promise<Product> => {
+  const response = await api.post<Product>('/api/products', productData);
+  return response.data;
+};
+
+export const updateProduct = async (id: string, productData: UpdateProductData): Promise<Product> => {
+  const response = await api.put<Product>(`/api/products/${id}`, productData);
+  return response.data;
+};
+
+export const deleteProduct = async (id: string): Promise<void> => {
+  await api.delete(`/api/products/${id}`);
+};
+
+// Category API functions
+export const getCategories = async (): Promise<Category[]> => {
+  const response = await api.get<Category[]>('/api/categories');
+  return response.data;
 };
 
 export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
