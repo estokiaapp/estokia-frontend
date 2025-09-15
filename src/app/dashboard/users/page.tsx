@@ -6,11 +6,11 @@ import {
   Box,
   Button,
   Typography,
-  Alert,
-  Snackbar,
 } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import { useAlert } from '@/app/context/AlertContext';
+import { parseApiError } from '@/utils/errorHandler';
 import {
   UserForm,
   UsersTable,
@@ -28,11 +28,7 @@ export default function UsersPage() {
   const [formData, setFormData] = useState<UserFormData>({ name: '', email: '', password: '' });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [menuUserId, setMenuUserId] = useState<number | null>(null);
-  const [alert, setAlert] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
-    open: false,
-    message: '',
-    severity: 'success'
-  });
+  const { showAlert } = useAlert();
 
   const fetchUsers = async () => {
     try {
@@ -40,7 +36,7 @@ export default function UsersPage() {
       const usersData = await getUsers();
       setUsers(usersData);
     } catch (error) {
-      setAlert({ open: true, message: 'Erro ao carregar usuários', severity: 'error' });
+      showAlert('Erro ao carregar usuários', 'error');
     } finally {
       setLoading(false);
     }
@@ -72,23 +68,20 @@ export default function UsersPage() {
       if (selectedUser) {
         const updateData = { name: formData.name, email: formData.email };
         await updateUser(selectedUser.id, updateData);
-        setAlert({ open: true, message: 'Usuário atualizado com sucesso', severity: 'success' });
+        showAlert('Usuário atualizado com sucesso', 'success');
       } else {
         if (!formData.password) {
-          setAlert({ open: true, message: 'Senha é obrigatória para criar usuário', severity: 'error' });
+          showAlert('Senha é obrigatória para criar usuário', 'error');
           return;
         }
         await createUser({ name: formData.name, email: formData.email, password: formData.password });
-        setAlert({ open: true, message: 'Usuário criado com sucesso', severity: 'success' });
+        showAlert('Usuário criado com sucesso', 'success');
       }
       handleCloseForm();
       fetchUsers();
     } catch (error: any) {
-      setAlert({
-        open: true,
-        message: error.response?.data?.message || 'Erro ao salvar usuário',
-        severity: 'error'
-      });
+      const errorMessage = parseApiError(error, 'Erro ao salvar usuário');
+      showAlert(errorMessage, 'error');
     }
   };
 
@@ -97,16 +90,13 @@ export default function UsersPage() {
 
     try {
       await deleteUser(selectedUser.id);
-      setAlert({ open: true, message: 'Usuário excluído com sucesso', severity: 'success' });
+      showAlert('Usuário excluído com sucesso', 'success');
       setOpenDeleteDialog(false);
       setSelectedUser(null);
       fetchUsers();
     } catch (error: any) {
-      setAlert({
-        open: true,
-        message: error.response?.data?.message || 'Erro ao excluir usuário',
-        severity: 'error'
-      });
+      const errorMessage = parseApiError(error, 'Erro ao excluir usuário');
+      showAlert(errorMessage, 'error');
     }
   };
 
@@ -182,15 +172,6 @@ export default function UsersPage() {
         onConfirm={handleDeleteUser}
       />
 
-      <Snackbar
-        open={alert.open}
-        autoHideDuration={6000}
-        onClose={() => setAlert({ ...alert, open: false })}
-      >
-        <Alert severity={alert.severity} onClose={() => setAlert({ ...alert, open: false })}>
-          {alert.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 }

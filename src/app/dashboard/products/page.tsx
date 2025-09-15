@@ -13,11 +13,11 @@ import {
   Box,
   Button,
   Typography,
-  Alert,
-  Snackbar,
 } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import { useAlert } from '@/app/context/AlertContext';
+import { parseApiError } from '@/utils/errorHandler';
 import {
   ProductForm,
   ProductsTable,
@@ -48,15 +48,7 @@ export default function ProductsPage() {
   });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [menuProductId, setMenuProductId] = useState<string | null>(null);
-  const [alert, setAlert] = useState<{
-    open: boolean;
-    message: string;
-    severity: 'success' | 'error';
-  }>({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
+  const { showAlert } = useAlert();
 
   const fetchProducts = async () => {
     try {
@@ -64,11 +56,7 @@ export default function ProductsPage() {
       const productsData = await getProducts();
       setProducts(productsData);
     } catch (error) {
-      setAlert({
-        open: true,
-        message: 'Erro ao carregar produtos',
-        severity: 'error',
-      });
+      showAlert('Erro ao carregar produtos', 'error');
     } finally {
       setLoading(false);
     }
@@ -133,15 +121,11 @@ export default function ProductsPage() {
 
   const validateForm = () => {
     if (!formData.name.trim()) {
-      setAlert({
-        open: true,
-        message: 'Nome é obrigatório',
-        severity: 'error',
-      });
+      showAlert('Nome é obrigatório', 'error');
       return false;
     }
     if (!formData.sku.trim()) {
-      setAlert({ open: true, message: 'SKU é obrigatório', severity: 'error' });
+      showAlert('SKU é obrigatório', 'error');
       return false;
     }
     return true;
@@ -178,27 +162,16 @@ export default function ProductsPage() {
 
       if (selectedProduct) {
         await updateProduct(selectedProduct.id, productData);
-        setAlert({
-          open: true,
-          message: 'Produto atualizado com sucesso',
-          severity: 'success',
-        });
+        showAlert('Produto atualizado com sucesso', 'success');
       } else {
         await createProduct(productData as CreateProductData);
-        setAlert({
-          open: true,
-          message: 'Produto criado com sucesso',
-          severity: 'success',
-        });
+        showAlert('Produto criado com sucesso', 'success');
       }
       handleCloseForm();
       fetchProducts();
     } catch (error: any) {
-      setAlert({
-        open: true,
-        message: error.response?.data?.message || 'Erro ao salvar produto',
-        severity: 'error',
-      });
+      const errorMessage = parseApiError(error, 'Erro ao salvar produto');
+      showAlert(errorMessage, 'error');
     }
   };
 
@@ -207,20 +180,13 @@ export default function ProductsPage() {
 
     try {
       await deleteProduct(selectedProduct.id);
-      setAlert({
-        open: true,
-        message: 'Produto excluído com sucesso',
-        severity: 'success',
-      });
+      showAlert('Produto excluído com sucesso', 'success');
       setOpenDeleteDialog(false);
       setSelectedProduct(null);
       fetchProducts();
     } catch (error: any) {
-      setAlert({
-        open: true,
-        message: error.response?.data?.message || 'Erro ao excluir produto',
-        severity: 'error',
-      });
+      const errorMessage = parseApiError(error, 'Erro ao excluir produto');
+      showAlert(errorMessage, 'error');
     }
   };
 
@@ -308,18 +274,6 @@ export default function ProductsPage() {
         onConfirm={handleDeleteProduct}
       />
 
-      <Snackbar
-        open={alert.open}
-        autoHideDuration={6000}
-        onClose={() => setAlert({ ...alert, open: false })}
-      >
-        <Alert
-          severity={alert.severity}
-          onClose={() => setAlert({ ...alert, open: false })}
-        >
-          {alert.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 }
