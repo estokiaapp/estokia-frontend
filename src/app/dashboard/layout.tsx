@@ -30,6 +30,7 @@ import {
   Inventory as InventoryIcon,
   ShoppingCart as OrdersIcon,
   People as CustomersIcon,
+  Category as CategoryIcon,
   BarChart as AnalyticsIcon,
   Settings as SettingsIcon,
   ExitToApp as LogoutIcon,
@@ -41,6 +42,7 @@ const drawerWidth = 240;
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
   { text: 'Produtos', icon: <InventoryIcon />, path: '/dashboard/products' },
+  { text: 'Categorias', icon: <CategoryIcon />, path: '/dashboard/categories' },
   { text: 'Colaboradores', icon: <CustomersIcon />, path: '/dashboard/users' },
 ];
 
