@@ -1,4 +1,4 @@
-import { LoginData, SignupData, CreateProductData, UpdateProductData } from '@/dto/request';
+import { LoginData, SignupData, CreateProductData, UpdateProductData, CreateCategoryData, UpdateCategoryData } from '@/dto/request';
 import { LoginResponse, SignupResponse, User, UsersResponse, Product, Category } from '@/dto/response';
 import axios from 'axios';
 
@@ -94,6 +94,25 @@ export const deleteProduct = async (id: string): Promise<void> => {
 export const getCategories = async (): Promise<Category[]> => {
   const response = await api.get<Category[]>('/api/categories');
   return response.data;
+};
+
+export const getCategoryById = async (id: string): Promise<Category> => {
+  const response = await api.get<Category>(`/api/categories/${id}`);
+  return response.data;
+};
+
+export const createCategory = async (categoryData: CreateCategoryData): Promise<Category> => {
+  const response = await api.post<Category>('/api/categories', categoryData);
+  return response.data;
+};
+
+export const updateCategory = async (id: string, categoryData: UpdateCategoryData): Promise<Category> => {
+  const response = await api.put<Category>(`/api/categories/${id}`, categoryData);
+  return response.data;
+};
+
+export const deleteCategory = async (id: string): Promise<void> => {
+  await api.delete(`/api/categories/${id}`);
 };
 
 export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
