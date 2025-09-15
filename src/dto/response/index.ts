@@ -16,3 +16,15 @@ export interface UserResponseData {
 	email: string;
 	name: string;
 }
+
+export interface User {
+	id: number
+	email: string
+	name: string
+	createdAt: string
+	updatedAt: string
+}
+
+export interface UsersResponse {
+	users: User[]
+}
