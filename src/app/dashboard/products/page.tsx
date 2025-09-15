@@ -10,56 +10,21 @@ import {
 } from '@/services/api';
 import { CreateProductData, UpdateProductData } from '@/dto/request';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Typography,
   Box,
   Button,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Menu,
+  Typography,
   Alert,
   Snackbar,
-  Chip,
-  Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
 } from '@mui/material';
-import {
-  Add as AddIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  MoreVert as MoreVertIcon,
-  Inventory as InventoryIcon,
-} from '@mui/icons-material';
+import { Add as AddIcon } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
-import { format, formatDate } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-
-interface ProductFormData {
-  name: string;
-  sku: string;
-  categoryId: string;
-  supplierId: string;
-  costPrice: string;
-  sellingPrice: string;
-  currentStock: string;
-  minimumStock: string;
-  maximumStock: string;
-  unitOfMeasure: string;
-  description: string;
-}
+import {
+  ProductForm,
+  ProductsTable,
+  DeleteProductDialog,
+  ActionMenu,
+  ProductFormData,
+} from './components';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -123,7 +88,7 @@ export default function ProductsPage() {
     fetchCategories();
   }, []);
 
-  const resetFormData = () => ({
+  const resetFormData = (): ProductFormData => ({
     name: '',
     sku: '',
     categoryId: '',
@@ -289,52 +254,6 @@ export default function ProductsPage() {
     handleMenuClose();
   };
 
-  const formatDate = (dateString: string) => {
-    try {
-      return format(new Date(dateString), 'dd/MM/yyyy', { locale: ptBR });
-    } catch {
-      return dateString;
-    }
-  };
-
-  const formatCurrency = (value?: number) => {
-    if (value === undefined || value === null) return '-';
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value);
-  };
-
-  const getCategoryName = (categoryId?: string) => {
-    if (!categoryId) return '-';
-    const category = categories.find((cat) => cat.id === categoryId);
-    return category ? category.name : categoryId;
-  };
-
-  const getStockStatus = (product: Product) => {
-    if (product.currentStock === 0) {
-      return <Chip label='Sem Estoque' color='error' size='small' />;
-    }
-
-    if (product.currentStock !== undefined && product.currentStock < 0) {
-      return <Chip label='Estoque Negativo' color='error' size='small' />;
-    }
-
-    if (
-      product.currentStock &&
-      product.minimumStock &&
-      product.currentStock <= product.minimumStock
-    ) {
-      return <Chip label='Estoque Baixo' color='warning' size='small' />;
-    }
-
-    if (product.currentStock && product.currentStock > 0) {
-      return <Chip label='Em Estoque' color='success' size='small' />;
-    }
-
-    return null;
-  };
-
   return (
     <Box>
       <Box
@@ -357,287 +276,37 @@ export default function ProductsPage() {
         </Button>
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label='products table'>
-          <TableHead>
-            <TableRow>
-              <TableCell>SKU</TableCell>
-              <TableCell>Nome</TableCell>
-              <TableCell>Categoria</TableCell>
-              <TableCell>Preço de Venda</TableCell>
-              <TableCell>Estoque Atual</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Criado em</TableCell>
-              <TableCell align='center'>Ações</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={8} align='center'>
-                  Carregando...
-                </TableCell>
-              </TableRow>
-            ) : products.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={8} align='center'>
-                  <Box sx={{ py: 4, textAlign: 'center' }}>
-                    <InventoryIcon
-                      sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }}
-                    />
-                    <Typography variant='h6' color='text.secondary'>
-                      Nenhum produto encontrado
-                    </Typography>
-                    <Typography variant='body2' color='text.secondary'>
-                      Clique em "Novo Produto" para adicionar seu primeiro
-                      produto
-                    </Typography>
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ) : (
-              products.map((product) => (
-                <TableRow
-                  key={product.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell>
-                    <Typography variant='body2' fontWeight='medium'>
-                      {product.sku}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant='body2'>{product.name}</Typography>
-                    {product.description && (
-                      <Typography
-                        variant='caption'
-                        color='text.secondary'
-                        display='block'
-                      >
-                        {product.description}
-                      </Typography>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant='body2'>
-                      {getCategoryName(product.categoryId)}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{formatCurrency(product.sellingPrice)}</TableCell>
-                  <TableCell>
-                    {product.currentStock ?? '-'}
-                    {product.unitOfMeasure && ` ${product.unitOfMeasure}`}
-                  </TableCell>
-                  <TableCell>{getStockStatus(product)}</TableCell>
-                  <TableCell>{formatDate(product.createdAt)}</TableCell>
-                  <TableCell align='center'>
-                    <IconButton
-                      onClick={(e) => handleMenuClick(e, product.id)}
-                      size='small'
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <ProductsTable
+        products={products}
+        categories={categories}
+        loading={loading}
+        onMenuClick={handleMenuClick}
+      />
 
-      <Menu
+      <ActionMenu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
-      >
-        <MenuItem onClick={handleEditClick}>
-          <EditIcon sx={{ mr: 1 }} fontSize='small' />
-          Editar
-        </MenuItem>
-        <MenuItem onClick={handleDeleteClick} sx={{ color: 'error.main' }}>
-          <DeleteIcon sx={{ mr: 1 }} fontSize='small' />
-          Excluir
-        </MenuItem>
-      </Menu>
+        onEdit={handleEditClick}
+        onDelete={handleDeleteClick}
+      />
 
-      <Dialog open={openForm} onClose={handleCloseForm} maxWidth='md' fullWidth>
-        <DialogTitle>
-          {selectedProduct ? 'Editar Produto' : 'Novo Produto'}
-        </DialogTitle>
-        <DialogContent>
-          <Grid container spacing={3} sx={{ mt: 1 }}>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <TextField
-                label='Nome *'
-                fullWidth
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                required
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <TextField
-                label='SKU *'
-                fullWidth
-                value={formData.sku}
-                onChange={(e) =>
-                  setFormData({ ...formData, sku: e.target.value })
-                }
-                required
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <TextField
-                label='Preço de Custo'
-                type='number'
-                fullWidth
-                value={formData.costPrice}
-                onChange={(e) =>
-                  setFormData({ ...formData, costPrice: e.target.value })
-                }
-                inputProps={{ min: 0, step: 0.01 }}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <TextField
-                label='Preço de Venda'
-                type='number'
-                fullWidth
-                value={formData.sellingPrice}
-                onChange={(e) =>
-                  setFormData({ ...formData, sellingPrice: e.target.value })
-                }
-                inputProps={{ min: 0, step: 0.01 }}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <TextField
-                label='Estoque Atual'
-                type='number'
-                fullWidth
-                value={formData.currentStock}
-                onChange={(e) =>
-                  setFormData({ ...formData, currentStock: e.target.value })
-                }
-                inputProps={{ min: 0 }}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <TextField
-                label='Estoque Mínimo'
-                type='number'
-                fullWidth
-                value={formData.minimumStock}
-                onChange={(e) =>
-                  setFormData({ ...formData, minimumStock: e.target.value })
-                }
-                inputProps={{ min: 0 }}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <TextField
-                label='Estoque Máximo'
-                type='number'
-                fullWidth
-                value={formData.maximumStock}
-                onChange={(e) =>
-                  setFormData({ ...formData, maximumStock: e.target.value })
-                }
-                inputProps={{ min: 0 }}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <TextField
-                label='Unidade de Medida'
-                fullWidth
-                value={formData.unitOfMeasure}
-                onChange={(e) =>
-                  setFormData({ ...formData, unitOfMeasure: e.target.value })
-                }
-                placeholder='ex: UN, KG, L, M'
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <FormControl fullWidth>
-                <InputLabel>Categoria</InputLabel>
-                <Select
-                  value={formData.categoryId}
-                  label='Categoria'
-                  onChange={(e) =>
-                    setFormData({ ...formData, categoryId: e.target.value })
-                  }
-                >
-                  <MenuItem value=''>
-                    <em>Selecione uma categoria</em>
-                  </MenuItem>
-                  {categories.map((category) => (
-                    <MenuItem key={category.id} value={category.id}>
-                      {category.name}
-                      {category.description && (
-                        <Typography
-                          variant='caption'
-                          color='text.secondary'
-                          sx={{ ml: 1 }}
-                        >
-                          - {category.description}
-                        </Typography>
-                      )}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid size={12}>
-              <TextField
-                label='Descrição'
-                fullWidth
-                multiline
-                rows={3}
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-              />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseForm}>Cancelar</Button>
-          <Button
-            onClick={handleSubmitForm}
-            variant='contained'
-            disabled={!formData.name || !formData.sku}
-          >
-            {selectedProduct ? 'Atualizar' : 'Criar'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ProductForm
+        open={openForm}
+        selectedProduct={selectedProduct}
+        formData={formData}
+        categories={categories}
+        onClose={handleCloseForm}
+        onSubmit={handleSubmitForm}
+        onFormDataChange={setFormData}
+      />
 
-      <Dialog
+      <DeleteProductDialog
         open={openDeleteDialog}
+        selectedProduct={selectedProduct}
         onClose={() => setOpenDeleteDialog(false)}
-      >
-        <DialogTitle>Confirmar Exclusão</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Tem certeza que deseja excluir o produto{' '}
-            <strong>{selectedProduct?.name}</strong>? Esta ação não pode ser
-            desfeita.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDeleteDialog(false)}>Cancelar</Button>
-          <Button
-            onClick={handleDeleteProduct}
-            color='error'
-            variant='contained'
-          >
-            Excluir
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onConfirm={handleDeleteProduct}
+      />
 
       <Snackbar
         open={alert.open}
