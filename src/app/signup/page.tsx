@@ -11,6 +11,8 @@ import {
   Link as MuiLink,
 } from '@mui/material';
 import Link from 'next/link';
+import { useAlert } from '@/app/context/AlertContext';
+import { useRouter } from 'next/navigation';
 import { signupUser } from '@/services/api';
 import { SignupData } from '@/dto/request';
 import LoginTexts from '@/components/LoginTexts';
@@ -28,13 +30,25 @@ export default function SignupPage() {
     },
   });
 
+  const { showAlert } = useAlert();
+  const router = useRouter();
+
   const onSubmit = async (data: SignupData) => {
     console.log('Signup data:', data);
     try {
-      var responseData = signupUser(data);
+      const responseData = await signupUser(data);
       console.log('Server response:', responseData);
+      showAlert('Cadastro realizado com sucesso!', 'success');
+
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 1000);  
     } catch (error) {
       console.error('There was an error!', error);
+      showAlert(
+        'Erro ao fazer cadastro. Verifique suas credenciais e tente novamente.',
+        'error'
+      );
     }
   };
 
@@ -171,3 +185,5 @@ export default function SignupPage() {
     </Container>
   );
 }
+
+

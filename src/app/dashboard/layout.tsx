@@ -44,6 +44,7 @@ const menuItems = [
   { text: 'Produtos', icon: <InventoryIcon />, path: '/dashboard/products' },
   { text: 'Categorias', icon: <CategoryIcon />, path: '/dashboard/categories' },
   { text: 'Colaboradores', icon: <CustomersIcon />, path: '/dashboard/users' },
+  { text: 'Vendas', icon: <OrdersIcon />, path: '/dashboard/sales' },
 ];
 
 interface DashboardLayoutProps {
